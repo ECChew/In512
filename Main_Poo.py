@@ -48,7 +48,7 @@ GridProba[19,19].Set_Human(GridProba)
 
 
 #### Save
-np.save
+np.save('Map.npy', GridProba)
 
 
 
