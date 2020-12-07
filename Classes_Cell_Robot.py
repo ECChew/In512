@@ -10,19 +10,19 @@ class Cell:
         
     #Spread the information of a human 2 cells around
     def Set_Human(self, Map):
-        self.L = [0, 1, 0, 0]
-        
+        self.L = findMaxL([0, 1, 0, 0], self.L) 
         for i in range(-1,2):
             for j in range (-1,2):
                 try:
-                    findMaxL(Map[self.x + i, self.y + j].L, [0, 0.6, 0, 0])
+                    #print("i - " ,i , "j - ", j ,Map[self.x + i, self.y + j].L)
+                    Map[self.x+i, self.y+j].L = findMaxL(Map[self.x + i, self.y + j].L, [0, 0.6, 0, 0])
                 except:
                     pass
                 
-        for i in range(-1,2):
-            for j in range (-1,2):
+        for i in range(-2,3):
+            for j in range (-2,3):
                 try:
-                    findMaxL(Map[self.x + 2*i, self.y + 2*j].L, [0, 0.3, 0, 0])
+                    Map[self.x+i, self.y+j].L = findMaxL(Map[self.x + i, self.y + j].L, [0, 0.3, 0, 0])
                 except:
                     pass
     # Spread the information of a wall 1 cell around 
@@ -32,22 +32,85 @@ class Cell:
         for i in range(-1,2):
             for j in range (-1,2):
                 try:
-                    findMaxL(Map[self.x + i, self.y + j].L, [0.5, 0, 0, 0])
+                    Map[self.x+i, self.y+j].L = findMaxL(Map[self.x + i, self.y + j].L, [0.5, 0, 0, 0])
                 except:
                     pass
+                
+    def Set_Robot(self, Map):
+        self.L = [0, 0, 1, 1]
+        Map[self.x, self.y].L = findMaxL(Map[self.x, self.y].L, self.L)
             
-        
-class Robot():
+class Believe():
     def __init__(self, xValue, yValue):
-        # self.L = [0, 0, 0, 1]
         self.x = xValue
         self.y = yValue
+        self.L = [1,1]
+        
+    def ConfirmBelief(self, Map):
+        self.L = Map[self.x, self.y].L[:2] # Found using sensor at cell
+   
+    def Prediction_Wall(self, MapProba, MapBelief):
+        if self.L[0] == 0:
+            for i in range(-1,2):
+                for j in range (-1,2):
+                    try:
+                        if MapProba[self.x + i, self.y + j].L[2] == 0:
+                            MapBelief[self.x+i, self.y+j].L[0] *= 0
+                    except: 
+                        pass
+        else:
+            for i in range(-1,2):
+                for j in range (-1,2):
+                    try:
+                        if MapProba[self.x + i, self.y + j].L[2] == 0:
+                            MapBelief[self.x+i, self.y+j].L[0] *= 1
+                    except: 
+                        pass
     
-    def Check_Human(self, Map):
-        Case = Map[self.x, self.y]
-        if Case.L[1] == 1:
-            print("Humain trouvé et à vendre")
+    def Prediction_Human(self, MapProba, MapBelief):
+        if self.L[1] == 0:
+            for i in range(-2,3):
+                for j in range (-2,3):
+                    try:
+                        if MapProba[self.x + i, self.y + j].L[1] == 0:
+                            MapBelief[self.x+i, self.y+j].L[1] *= 0
+                    except: 
+                        pass
+        elif self.L[1]==0.3:
+            for i in range (-3, 2):
+                for j in range (-3, 2):
+                    if MapProba[self.x + i, self.y + j] == 0:
+                        try:
+                            if MapProba[self.x + i, self.y + j].L[1] == 0:
+                                MapBelief[self.x+i, self.y+j].L[1] *= 1
+                            except: 
+                                pass
+            for i in range(-1,2):
+                for j in range (-1,2):
+                    try:
+                        if MapProba[self.x + i, self.y + j].L[1] == 0:
+                            MapBelief[self.x+i, self.y+j].L[1] *= 0.6
+                    except: 
+                        pass
+        elif self.L[1] == 0.6:
+            for i in range(-1,2):
+                for j in range (-1,2):
+                    try:
+                        if MapProba[self.x + i, self.y + j].L[1] == 0:
+                            MapBelief[self.x+i, self.y+j].L[1] *= 1
+                    except: 
+                        pass
+        else:
+            print("Wow un humain à sauver en case ", self.x,", ", self.y)
+
+
+                    
             
+            
+                
+                
+        
+
             
 def findMaxL(L1, L2):
     maxlist = []

@@ -34,7 +34,8 @@ for i in range(2,7):
         
 for i in range(11,16):
     GridProba[i,18].Set_Wall(GridProba)
-    
+
+
 #### Position of humans
 GridProba[2,4].Set_Human(GridProba)
 GridProba[0,8].Set_Human(GridProba)
@@ -46,13 +47,15 @@ GridProba[19,8].Set_Human(GridProba)
 GridProba[19,14].Set_Human(GridProba)
 GridProba[19,19].Set_Human(GridProba)
 
+#### Initial position of the robot
+GridProba[15,1].Set_Robot(GridProba)
+
 
 #### Save
 np.save('Map.npy', GridProba)
 
 
-
-
+print(GridProba[1,5].L)
 
 
 
