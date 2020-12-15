@@ -128,7 +128,11 @@ class Believe():
         else:
             print("Wow un humain à sauver en case ", self.x,", ", self.y)
 
-
+    def run(self, MapProba, MapBelief):
+        self.ConfirmBelief(MapProba)
+        self.Prediction_Wall(MapProba, MapBelief)
+        self.Prediction_Human(MapProba, MapBelief)
+        
                     
          
 
