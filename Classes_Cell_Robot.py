@@ -73,58 +73,78 @@ class Believe():
         
     def ConfirmBelief(self, Map):
         self.L = Map[self.x, self.y].L[:2] # Found using sensor at cell
+
    
     def Prediction_Wall(self, MapProba, MapBelief):
         if self.L[0] == 0:
             for i in range(-1,2):
                 for j in range (-1,2):
-                    try:
-                        if MapProba[self.x + i, self.y + j].L[2] == 0:
-                            MapBelief[self.x+i, self.y+j].L[0] *= 0
-                    except: 
+                    if MapProba[self.x+i, self.y+j].L[2] == 1:
                         pass
+                    else:
+                        try:
+                            if MapProba[max(self.x + i, 0), max(self.y + j, 0)].L[2] == 0:
+                                MapBelief[max(self.x + i,0), max(self.y + j, 0)].L[0] *= 0.1
+                        except:
+                            pass
         else:
             for i in range(-1,2):
                 for j in range (-1,2):
-                    try:
-                        if MapProba[self.x + i, self.y + j].L[2] == 0:
-                            MapBelief[self.x+i, self.y+j].L[0] *= 1
-                    except: 
+                    if MapProba[self.x+i, self.y+j].L[2] == 1:
                         pass
+                    else:
+                        try:
+                            if MapProba[max(self.x + i, 0), max(self.y + j, 0)].L[2] == 0:
+                                MapBelief[max(self.x + i,0), max(self.y + j, 0)].L[0] *= 1
+                        except:
+                            pass
     
     def Prediction_Human(self, MapProba, MapBelief):
+
         if self.L[1] == 0:
             for i in range(-2,3):
                 for j in range (-2,3):
-                    try:
-                        if MapProba[self.x + i, self.y + j].L[1] == 0:
-                            MapBelief[self.x+i, self.y+j].L[1] *= 0
-                    except: 
+                    print("Human prediction", max(self.x + i, 0), max(self.y + j, 0))
+                    if MapProba[self.x+i, self.y+j].L[2] == 1:
                         pass
-        elif self.L[1]==0.3:
-            for i in range (-3, 2):
-                for j in range (-3, 2):
-                    if MapProba[self.x + i, self.y + j] == 0:
+                    else:
                         try:
-                            if MapProba[self.x + i, self.y + j].L[1] == 0:
-                                MapBelief[self.x+i, self.y+j].L[1] *= 1
-                        except: 
-                                pass
+                            if self.x+i >= 0 and self.y+j >= 0:
+                                MapBelief[(self.x + i), (self.y + j)].L[1] *= 0.2
+                        except:
+                            pass
+        elif self.L[1]==0.3:
+            for i in range (-2, 3):
+                for j in range (-2, 3):
+                    if MapProba[self.x+i, self.y+j].L[2] == 1:
+                        pass
+                    else:
+                        try:
+                            if self.x + i >= 0 and self.y + j >= 0:
+                                MapBelief[self.x + i, self.y + j].L[1] *= 1
+                        except:
+                            pass
             for i in range(-1,2):
                 for j in range (-1,2):
-                    try:
-                        if MapProba[self.x + i, self.y + j].L[1] == 0:
-                            MapBelief[self.x+i, self.y+j].L[1] *= 0.6
-                    except: 
+                    if MapProba[self.x+i, self.y+j].L[2] == 1:
                         pass
+                    else:
+                        try:
+                            if self.x+i >= 0 and self.y+j >= 0:
+                                MapBelief[(self.x + i), (self.y + j)].L[1] *= 0.6
+                        except:
+                            pass
         elif self.L[1] == 0.6:
             for i in range(-1,2):
                 for j in range (-1,2):
-                    try:
-                        if MapProba[self.x + i, self.y + j].L[1] == 0:
-                            MapBelief[self.x+i, self.y+j].L[1] *= 1
-                    except: 
+                    if MapProba[self.x+i, self.y+j].L[2] == 1:
                         pass
+                    else:
+                        try:
+                            if self.x + i >= 0 and self.y + j >= 0:
+                                MapBelief[(self.x + i), (self.y + j)].L[1] *= 1
+                        except:
+                            pass
         else:
             print("Wow un humain à sauver en case ", self.x,", ", self.y)
 
@@ -132,7 +152,8 @@ class Believe():
         self.ConfirmBelief(MapProba)
         self.Prediction_Wall(MapProba, MapBelief)
         self.Prediction_Human(MapProba, MapBelief)
-        
+        self.ConfirmBelief(MapProba) # We reconfirm as the predictions will also predict on the case we are on
+        MapProba[self.x, self.y].L[2] = 1
                     
          
 

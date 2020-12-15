@@ -73,7 +73,21 @@ GridProba[15,1].Set_Robot(GridProba)
 np.save('Map.npy', GridProba)
 
 GridBelief = np.zeros((20,20), dtype = cl.Believe)
+for i in range(20):
+    for j in range(20):
+        GridBelief[i, j] = cl.Believe(i, j)
 
+GridBelief[15,1].run(GridProba, GridBelief)
+#Avance d'une case
+GridBelief[14,1].run(GridProba, GridBelief)
+GridBelief[1,1].run(GridProba, GridBelief)
+GridBelief[1,2].run(GridProba, GridBelief)
+GridBelief[1,3].run(GridProba, GridBelief)
+GridBelief[1,4].run(GridProba, GridBelief)
+GridBelief[2,4].run(GridProba, GridBelief)
+GridBelief[0,6].run(GridProba, GridBelief)
+
+print(GridBelief[0,6].L,GridBelief[1,6].L, GridBelief[0,7].L)
 peoplebelief = np.zeros(GridProba.shape, dtype=float)
 wallsbelief = np.zeros(GridProba.shape, dtype=float)
 people = np.zeros(GridProba.shape, dtype=float)
@@ -85,11 +99,11 @@ for i in range(GridProba.shape[0]):
         walls[i, j] = GridProba[i, j].L[0]
         people[i, j] = GridProba[i, j].L[1]
         hybrid[i, j] = GridProba[i, j].L[1]- GridProba[i, j].L[0]
-        GridBelief[i, j].run(GridProba, GridBelief)
         wallsbelief[i, j] = GridBelief[i, j].L[0]
         peoplebelief[i, j] = GridBelief[i, j].L[1]
-        
 
+        
+"""
 cmap = colors.ListedColormap(['White','Gray','Black'])
 cmap2 = colors.ListedColormap(['White','Yellow', 'Orange','Red'])
 plt.figure(figsize=(6,6))
@@ -98,11 +112,12 @@ plt.figure(figsize=(6,6))
 plt.pcolor(people[::-1, :],cmap=cmap2,edgecolors='k', linewidths=3)
 plt.figure(figsize=(6,6))
 plt.pcolor(hybrid[::-1, :],cmap='Reds',edgecolors='k', linewidths=3)
+"""
 plt.figure(figsize=(6,6))
-plt.pcolor(wallsbelief[::-1, :],cmap='Reds',edgecolors='k', linewidths=3)
+plt.pcolor(wallsbelief[::-1, :],cmap='seismic',edgecolors='k', linewidths=3)
 plt.title("Walls belief")
 plt.figure(figsize=(6,6))
-plt.pcolor(peoplebelief[::-1, :],cmap='Reds',edgecolors='k', linewidths=3)
+plt.pcolor(peoplebelief[::-1, :],cmap='seismic',edgecolors='k', linewidths=3)
 plt.title("People belief")
 plt.xticks(np.arange(0.5,20.5,step=1))
 plt.yticks(np.arange(0.5,20.5,step=1))
