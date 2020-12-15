@@ -77,17 +77,38 @@ for i in range(20):
     for j in range(20):
         GridBelief[i, j] = cl.Believe(i, j)
 
-GridBelief[15,1].run(GridProba, GridBelief)
-#Avance d'une case
-GridBelief[14,1].run(GridProba, GridBelief)
-GridBelief[1,1].run(GridProba, GridBelief)
-GridBelief[1,2].run(GridProba, GridBelief)
-GridBelief[1,3].run(GridProba, GridBelief)
-GridBelief[1,4].run(GridProba, GridBelief)
-GridBelief[2,4].run(GridProba, GridBelief)
-GridBelief[0,6].run(GridProba, GridBelief)
+GridBelief[15,1].Mouvement(GridProba, GridBelief)
+##Avance d'une case
+GridBelief[14,2].Mouvement(GridProba, GridBelief)
+GridBelief[13,2].Mouvement(GridProba, GridBelief)
+GridBelief[12,2].Mouvement(GridProba, GridBelief)
+GridBelief[11,1].Mouvement(GridProba, GridBelief)
+GridBelief[10,2].Mouvement(GridProba, GridBelief)
+GridBelief[9,2].Mouvement(GridProba, GridBelief)
+GridBelief[8,1].Mouvement(GridProba, GridBelief)
+GridBelief[7,2].Mouvement(GridProba, GridBelief)
+GridBelief[6,2].Mouvement(GridProba, GridBelief)
+GridBelief[5,1].Mouvement(GridProba, GridBelief)
+GridBelief[4,2].Mouvement(GridProba, GridBelief)
+GridBelief[3,2].Mouvement(GridProba, GridBelief)
+GridBelief[2,1].Mouvement(GridProba, GridBelief)
+GridBelief[1,2].Mouvement(GridProba, GridBelief)
+GridBelief[0,2].Mouvement(GridProba, GridBelief)
+GridBelief[0,3].Mouvement(GridProba, GridBelief)
+GridBelief[1,3].Mouvement(GridProba, GridBelief)
+GridBelief[1,4].Mouvement(GridProba, GridBelief)
+GridBelief[0,5].Mouvement(GridProba, GridBelief)
+GridBelief[0,6].Mouvement(GridProba, GridBelief)
+GridBelief[1,5].Mouvement(GridProba, GridBelief)
+GridBelief[1,6].Mouvement(GridProba, GridBelief)
+GridBelief[1,7].Mouvement(GridProba, GridBelief)
+GridBelief[0,8].Mouvement(GridProba, GridBelief)
 
-print(GridBelief[0,6].L,GridBelief[1,6].L, GridBelief[0,7].L)
+
+
+
+
+#print(GridBelief[0,6].L,GridBelief[1,6].L, GridBelief[0,7].L)
 peoplebelief = np.zeros(GridProba.shape, dtype=float)
 wallsbelief = np.zeros(GridProba.shape, dtype=float)
 people = np.zeros(GridProba.shape, dtype=float)
@@ -124,7 +145,7 @@ plt.yticks(np.arange(0.5,20.5,step=1))
 plt.show()
 
 
-print(GridProba[3,3].L)
+#print(GridProba[3,3].L)
 
 
 

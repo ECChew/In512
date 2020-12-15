@@ -84,7 +84,7 @@ class Believe():
                     else:
                         try:
                             if MapProba[max(self.x + i, 0), max(self.y + j, 0)].L[2] == 0:
-                                MapBelief[max(self.x + i,0), max(self.y + j, 0)].L[0] *= 0.1
+                                MapBelief[max(self.x + i,0), max(self.y + j, 0)].L[0] *= 0.001
                         except:
                             pass
         else:
@@ -104,13 +104,13 @@ class Believe():
         if self.L[1] == 0:
             for i in range(-2,3):
                 for j in range (-2,3):
-                    print("Human prediction", max(self.x + i, 0), max(self.y + j, 0))
+                    #print("Human prediction", max(self.x + i, 0), max(self.y + j, 0))
                     if MapProba[self.x+i, self.y+j].L[2] == 1:
                         pass
                     else:
                         try:
                             if self.x+i >= 0 and self.y+j >= 0:
-                                MapBelief[(self.x + i), (self.y + j)].L[1] *= 0.2
+                                MapBelief[(self.x + i), (self.y + j)].L[1] *= 0.1
                         except:
                             pass
         elif self.L[1]==0.3:
@@ -147,16 +147,59 @@ class Believe():
                             pass
         else:
             print("Wow un humain à sauver en case ", self.x,", ", self.y)
-
+    
+    def Aleatoire(self, MapProba, MapBelief):
+        MapProba[self.x, self.y].L[2] = 1
+        self.Possibility=[]
+        if self.L == [0,0]:
+            for i in range(-1,2):
+                for j in range(-1,2):
+                    try:
+                        if self.x + i >= 0 and self.y + j >= 0: 
+                            if MapProba[self.x+i, self.y+j].L[2]!= 1:
+                                self.Possibility.append([self.x+i, self.y+j])
+                    except:
+                        pass
+            print(self.Possibility[2])
+        #MapBelief[self.Possibility[0][0],self.Possibility[0][1]].run(MapProba, MapBelief)
+    
+    
+    def ProbabilisticWay(self, MapProba, MapBelief):
+       MapProba[self.x, self.y].L[2] = 1
+       self.Around = []
+       self.Liste = []
+       if self.L != [0,0]:
+            for i in range(-1,2):
+                for j in range(-1,2):
+                    try:
+                        if self.x + i >= 0 and self.y + j >= 0: 
+                            if MapProba[self.x+i, self.y+j].L[2] != 1:
+                                self.Around.append([self.x+i, self.y+j])
+                                self.Liste.append(MapBelief[self.x+i, self.y+j].L)
+                    except:
+                        pass
+            self.BestWay, self.Index = minimize(self.Liste,self.Around)
+            print(self.Index)
+            #print("Ratio wall/Human : ", self.BestWay,"at Position :", self.Index, "Belief : ",MapBelief[self.Index[0],self.Index[1]].L)
+       #MapBelief[self.Index[0],self.Index[1]].run(MapProba, MapBelief)
+        
+        
     def run(self, MapProba, MapBelief):
         self.ConfirmBelief(MapProba)
         self.Prediction_Wall(MapProba, MapBelief)
         self.Prediction_Human(MapProba, MapBelief)
         self.ConfirmBelief(MapProba) # We reconfirm as the predictions will also predict on the case we are on
-        MapProba[self.x, self.y].L[2] = 1
+        
                     
-         
-
+    def Mouvement(self, MapProba, MapBelief):
+        self.ConfirmBelief(MapProba)
+        self.Prediction_Wall(MapProba, MapBelief)
+        self.Prediction_Human(MapProba, MapBelief)
+        self.ConfirmBelief(MapProba)
+        if self.L == [0,0]:
+            self.Aleatoire( MapProba, MapBelief)
+        else:
+            self.ProbabilisticWay( MapProba, MapBelief)
             
                 
                 
@@ -166,5 +209,19 @@ class Believe():
 def findMaxL(L1, L2):
     maxlist = []
     for i in range(len(L1)):
-        maxlist.append( max(L1[i], L2[i]) )
+        maxlist.append( max(L1[i], L2[i]))
     return maxlist
+
+def minimize(LBelief,LPos): 
+    #print ("LBelief ", LBelief)
+    #print ("LPos ", LPos)
+    Lowest = 1
+    Index = 0
+    for i in range(len(LBelief)):
+        if LBelief[i][0]/LBelief[i][1]<Lowest:
+            Lowest = LBelief[i][0]/LBelief[i][1]
+            Index += 1
+        
+    return Lowest, LPos[Index]
+
+    
