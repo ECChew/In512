@@ -6,7 +6,9 @@ GridProba = np.zeros((20,20), dtype = cl.Cell)
 for i in range(20):
     for j in range(20):
         GridProba[i, j] = cl.Cell(i, j)
-        
+
+
+
 #### Position of Walls
 
 for i in [6,9,12]:
@@ -49,6 +51,10 @@ cl.PosHuman(x_Human,y_Human, GridProba)
 
 #### Save
 np.save('Map.npy', GridProba)
+
+
+
+
 
 GridBelief = np.zeros((20,20), dtype = cl.Believe)
 for i in range(20):
@@ -267,8 +273,8 @@ plt.title("People belief")
 
 #print(GridProba[3,3].L)
 
-
-
+import movementCounter
+print("Movement counter", movementCounter.mvtCounter, movementCounter.mvtCounter2, movementCounter.mvtCounter3)
 
 
 
