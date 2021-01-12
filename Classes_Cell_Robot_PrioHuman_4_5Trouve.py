@@ -250,16 +250,16 @@ class Believe():
                 print("Le murs", self.x + self.WallsPos[n][0], self.y+ self.WallsPos[n][1])
             except:
                 pass
-            if len(self.WallsPos)==3:
-                if MapBelief[self.x + self.WallsPos[n][0], self.y+ self.WallsPos[n][1]].WallValid == 1:
-                    print("Un wall a ete valide", self.x + self.WallsPos[n][0], self.y+ self.WallsPos[n][1])
-                    self.WallsPos.remove(self.WallsPos[n])
-                    try:
-                        self.WallsPos.remove([abs(self.WallsPos[n][0]), abs(self.WallsPos[n][1])])
-                        self.WallsPos.remove([-1*abs(self.WallsPos[n][0]),-1*abs(self.WallsPos[n][1])])
-
-                    except:
-                        pass
+#            if len(self.WallsPos)==3:
+#                if MapBelief[self.x + self.WallsPos[n][0], self.y+ self.WallsPos[n][1]].WallValid == 1:
+#                    print("Un wall a ete valide", self.x + self.WallsPos[n][0], self.y+ self.WallsPos[n][1])
+#                    self.WallsPos.remove(self.WallsPos[n])
+#                    try:
+#                        self.WallsPos.remove([abs(self.WallsPos[n][1]), abs(self.WallsPos[n][0])])
+#                        self.WallsPos.remove([-1*abs(self.WallsPos[n][1]),-1*abs(self.WallsPos[n][0])])
+#
+#                    except:
+#                        pass
 #        for n in range(len(self.WallsPos)):
 #            MapBelief[self.x + self.WallsPos[n][0], self.y+ self.WallsPos[n][1]].StraightWall(MapBelief)
         return len(self.WallsPos), self.WallsPos
