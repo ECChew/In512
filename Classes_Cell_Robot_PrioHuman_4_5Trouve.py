@@ -742,11 +742,11 @@ class Believe():
         # [Haut, Bas, Droite, Gauche]
         #print("Exploration")
         self.Direction = [0,0,0,0]
-        for i in range(self.x , 20):
+        for i in range(self.x +1, 20):
             self.Direction[1] += 1.5*MapBelief[i,self.y].L[1] - MapBelief[i,self.y].L[1]
         for i in range(self.x):
             self.Direction[0] += 1.5*MapBelief[i,self.y].L[1] - MapBelief[i,self.y].L[0]
-        for i in range(self.y , 20):
+        for i in range(self.y +1, 20):
             self.Direction[2] +=  1.5*MapBelief[self.x, i].L[1] - MapBelief[self.x, i].L[0]
         for i in range(self.y):
             self.Direction[3] += 1.5* MapBelief[self.x, i].L[1] - MapBelief[self.x, i].L[0]
@@ -824,11 +824,11 @@ class Believe():
         # [Haut, Bas, Droite, Gauche]
         #print("Exploration")
         self.Direction = [0,0,0,0]
-        for i in range(self.x , 20):
+        for i in range(self.x +1, 20):
             self.Direction[1] += MapBelief[i,self.y].L[1]
         for i in range(self.x):
             self.Direction[0] += MapBelief[i,self.y].L[1]
-        for i in range(self.y , 20):
+        for i in range(self.y +1, 20):
             self.Direction[2] += MapBelief[self.x, i].L[1] 
         for i in range(self.y):
             self.Direction[3] += MapBelief[self.x, i].L[1] 
@@ -848,9 +848,56 @@ class Believe():
         else:
             print("Into the Unknown,Gauche, NextStep : ",self.x  , self.y -1 )
             MapBelief[self.x - 1 , self.y].run(MapProba,MapBelief)
-        
+
+    def getOut(self, MapProba, MapBelief):
+        # [Haut, Bas, Droite, Gauche]
+        # print("Exploration")
+        self.coefExp = 2
+        self.coefWall = 1
+        self.Direction = [0, 0, 0, 0]
+        # Gauche
+        for j in range(0, self.y):
+            if self.y + j >= 0:
+                self.Direction[3] += (self.coefExp * (1 - MapProba[self.x, j].L[2]) - self.coefWall * MapBelief[self.x, j].L[0])
+                print("j", j,  (self.coefExp * (1 - MapProba[self.x, j].L[2]) - self.coefWall * MapBelief[self.x, j].L[0]))
+            else:
+                self.Direction[3] = -1
+        # Droite
+        for j in range(self.y + 1, 20):
+            if self.y+j < 20:
+                self.Direction[2] += (self.coefExp * (1 - MapProba[self.x, j].L[2]) - self.coefWall * MapBelief[self.x, j].L[0])
+            else:
+                self.Direction[2] = -1
+        # Haut
+        for i in range(0, self.x):
+            if self.x+i >= 0:
+                self.Direction[0] += (self.coefExp * (1 -MapProba[i, self.y].L[2]) - self.coefWall * MapBelief[i, self.y].L[0])
+            else:
+                self.Direction[0] = -1
+        # Bas
+        for i in range(self.x + 1, 20):
+            if self.x+i < 20:
+                self.Direction[1] += (self.coefExp * (1 -MapProba[i, self.y].L[2]) - self.coefWall * MapBelief[i, self.y].L[0])
+            else:
+                self.Direction[1] = -1
+        maxDir = self.Direction.index(max(self.Direction))
+        print("Test pos - ", self.Direction, maxDir)
+        if maxDir == 0 :
+            print(f"Get out of this area - Next position {self.x - 1, self.y}")
+            self.nextpos = [self.x - 1, self.y]
+        elif maxDir == 1 :
+            print(f"Get out of this area - Next position {self.x + 1, self.y}")
+            self.nextpos = [self.x + 1, self.y]
+        elif maxDir == 2 :
+            print(f"Get out of this area - Next position {self.x, self.y + 1}")
+            self.nextpos = [self.x, self.y + 1]
+        elif maxDir == 3 :
+            print(f"Get out of this area - Next position {self.x, self.y - 1}")
+            self.nextpos = [self.x, self.y - 1]
+        MapBelief[self.nextpos[0], self.nextpos[1]].Mouvement(MapProba, MapBelief)
+
     def run(self, MapProba, MapBelief):
-        if movementCounter.mvtCounter4 >= 180:
+        if movementCounter.mvtCounter4 >= 1800:
             print("Compteur de mouvement", movementCounter.mvtCounter4)
             return
         incrementCounter4()
@@ -868,7 +915,7 @@ class Believe():
                     
     def Mouvement(self, MapProba, MapBelief,i=0,j=0):
 
-        if movementCounter.mvtCounter4 >= 180 :
+        if movementCounter.mvtCounter4 >= 1800 :
             print("Compteur de mouvement", movementCounter.mvtCounter4)
             return
         incrementCounter4()
