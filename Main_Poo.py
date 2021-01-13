@@ -62,7 +62,9 @@ for i in range(20):
         GridBelief[i, j] = cl.Believe(i, j)
 
 GridBelief[15,1].Mouvement(GridProba, GridBelief)
+
 ##Avance d'une case
+
 GridBelief[14,1].Mouvement(GridProba, GridBelief)
 GridBelief[13,1].Mouvement(GridProba, GridBelief)
 GridBelief[12,1].Mouvement(GridProba, GridBelief)
@@ -97,7 +99,7 @@ GridBelief[4,8].Mouvement(GridProba, GridBelief)
 ########print("-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n")
 GridBelief[3,7].Mouvement(GridProba, GridBelief)
 ########print("-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n")
-GridBelief[0,8].Mouvement(GridProba, GridBelief)
+#GridBelief[0,8].Mouvement(GridProba, GridBelief)
 GridBelief[3,9].Mouvement(GridProba, GridBelief)
 ####print("-------------------------------------------------\n\n\n")
 GridBelief[2,10].Mouvement(GridProba, GridBelief)
@@ -165,16 +167,18 @@ GridBelief[13,15].Mouvement(GridProba,GridBelief)
 GridBelief[14,14].Mouvement(GridProba,GridBelief)
 #
 ##print("-------------------------------------------------\n\n\n")
-##GridBelief[14,13].ConfirmBelief(GridProba)
+#GridBelief[14,13].Mouvement(GridProba, GridBelief)
+#GridBelief[13,14].Mouvement(GridProba, GridBelief)
 #print("-------------------------------------------------\n\n\n")
 GridBelief[15,14].Mouvement(GridProba,GridBelief)
 ##print("-------------------------------------------------\n\n\n")
-##GridBelief[16,14].Mouvement(GridProba,GridBelief)
+#GridBelief[16,14].Mouvement(GridProba,GridBelief)
 print("-------------------------------------------------\n\n\n")
+#GridBelief[17,13].Mouvement(GridProba,GridBelief)
 #GridBelief[17,14].Mouvement(GridProba,GridBelief)
-#GridBelief[19,14].Mouvement(GridProba,GridBelief)
-#GridBelief[18,14].Mouvement(GridProba,GridBelief)
-
+GridBelief[19,14].Mouvement(GridProba,GridBelief)
+GridBelief[18,14].Mouvement(GridProba,GridBelief)
+"""print(GridBelief[17, 14].L)
 
 #print("-------------------------------------------------")
 #print("-------------------------------------------------")
@@ -215,7 +219,7 @@ print("-------------------------------------------------\n\n\n")
 
 
 #GridBelief[0,0].CaseToVisit(GridBelief)
-
+"""
 #print(GridBelief[0,6].L,GridBelief[1,6].L, GridBelief[0,7].L)
 peoplebelief = np.zeros(GridProba.shape, dtype=float)
 wallsbelief = np.zeros(GridProba.shape, dtype=float)
@@ -246,14 +250,14 @@ for i in range(GridProba.shape[0]):
 
 cmap = colors.ListedColormap(['White','Gray','Black'])
 cmap2 = colors.ListedColormap(['White','Yellow', 'Orange','Red'])
-#plt.figure(figsize=(6,6))
-#plt.pcolor(walls[::-1,:],cmap=cmap,edgecolors='k', linewidths=3)
-#plt.figure(figsize=(6,6))
-#plt.pcolor(people[::-1, :],cmap=cmap2,edgecolors='k', linewidths=3)
-#plt.figure(figsize=(6,6))
+plt.figure(figsize=(6,6))
+plt.pcolor(walls[::-1,:],cmap=cmap,edgecolors='k', linewidths=3)
+plt.figure(figsize=(6,6))
+plt.pcolor(people[::-1, :],cmap=cmap2,edgecolors='k', linewidths=3)
+plt.figure(figsize=(6,6))
 #plt.pcolor(Longueur[::-1, :],cmap='Reds',edgecolors='k', linewidths=3)
-#plt.figure(figsize=(6,6))
-#plt.pcolor(Explored[::-1, :],cmap=cmap2,edgecolors='k', linewidths=3)
+plt.figure(figsize=(6,6))
+plt.pcolor(Explored[::-1, :],cmap=cmap2,edgecolors='k', linewidths=3)
 #######plt.figure(figsize=(6,6))
 #######plt.pcolor(hybrid[::-1, :],cmap='Reds',edgecolors='k', linewidths=3)
 #####
@@ -269,13 +273,13 @@ plt.title("People belief")
 #
 #plt.xticks(np.arange(0.5,20.5,step=1))
 #plt.yticks(np.arange(0.5,20.5,step=1))
-#plt.show()
+plt.show()
 
 #print(GridProba[3,3].L)
 
 import movementCounter
-print("Movement counter", movementCounter.mvtCounter, movementCounter.mvtCounter2, movementCounter.mvtCounter3)
-
+print("Movement counter", movementCounter.mvtCounter, movementCounter.mvtCounter2, movementCounter.mvtCounter3, movementCounter.mvtCounter4)
+print(cl.PourcentPeopleProba(GridProba))
 
 
 

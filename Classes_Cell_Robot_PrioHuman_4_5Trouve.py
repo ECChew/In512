@@ -18,6 +18,9 @@ def incrementCounter2():
 
 def incrementCounter3():
     movementCounter.mvtCounter3 += 1
+def incrementCounter4():
+    movementCounter.mvtCounter4 += 1
+
 
 class Cell: 
     def __init__(self, xValue, yValue):
@@ -172,7 +175,7 @@ class Believe():
                             Diag.append([i,j])
                         else:
                             #print("Wallaround, i,j ", i,j , "x+i,y+j :",self.x+i, self.y+j)
-                            #MapBelief[self.x+i,self.y+j].ConfirmBelief(MapProba)
+                            MapBelief[self.x+i,self.y+j].ConfirmBelief(MapProba)
                             if MapBelief[self.x+i,self.y+j].L[0]==0:
                                 Diag.append([i,j])
             except:
@@ -637,7 +640,7 @@ class Believe():
             xreprise, yreprise = self.Human_Around_06(MapProba,MapBelief)
             return xreprise,yreprise
         else:
-            print("Coucou je retourne dans la boucle theoriquement",self.L[1] )
+            print("Je retourne dans la boucle theoriquement",self.L[1] )
             return None, None        
             
         
@@ -654,7 +657,7 @@ class Believe():
                     xreprise, yreprise = MapBelief[self.x+i, self.y+j].CheckValue03(MapProba,MapBelief)
                     print("0.3 Liste ",MapBelief[self.x+i, self.y+j].L)
                     if MapBelief[xreprise, yreprise].L[1]==0:
-                            print ("ALEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEED!!!!!!!!!!", xreprise, yreprise)
+                            print ("Belief people xreprise, yreprise = 0 à ", xreprise, yreprise)
                             MapBelief[xreprise, yreprise].run(MapProba,MapBelief)
                             break
                             
@@ -716,7 +719,7 @@ class Believe():
                         print("Liste ",MapBelief[self.x+i, self.y+j].L, "Found ",Found )
                         
                         if MapBelief[self.x+i, self.y+j].L[1]==0:
-                            print ("ALEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEED", self.x,self. y)
+                            print ("Belief human = 0 autour de ", self.x,self. y)
                             return xreprise, yreprise
                     else:
                         print("Je ne satisfais pas les conditions je ne vais pas en",self.x+i, self.y+j)
@@ -784,8 +787,10 @@ class Believe():
                                 else:
                                     self.Around.append([self.x+i, self.y+j])
                                     self.Liste.append(MapBelief[self.x+i, self.y+j].L)
+
                     except:
                         pass
+            print("This is la liste et le Around", self.Around, self.Liste)
             for i in range(len(self.Liste)):
                 
                 #print("Compteur",Compteur, len(self.Liste))
@@ -845,6 +850,10 @@ class Believe():
             MapBelief[self.x - 1 , self.y].run(MapProba,MapBelief)
         
     def run(self, MapProba, MapBelief):
+        if movementCounter.mvtCounter4 >= 180:
+            print("Compteur de mouvement", movementCounter.mvtCounter4)
+            return
+        incrementCounter4()
         print("\n\n\nCeci est un nouveau run", self.x ,self.y)
         MapProba[self.x, self.y].L[2] = 1
         self.ConfirmBelief(MapProba)
@@ -853,9 +862,16 @@ class Believe():
         print(f"IL y a {nbrWalls} murs autour de moi------------------------------" )
         self.Prediction_Human(MapProba, MapBelief,WallsPos)
         self.ConfirmBelief(MapProba) # We reconfirm as the predictions will also predict on the case we are on
+
+
         
                     
     def Mouvement(self, MapProba, MapBelief,i=0,j=0):
+
+        if movementCounter.mvtCounter4 >= 180 :
+            print("Compteur de mouvement", movementCounter.mvtCounter4)
+            return
+        incrementCounter4()
         print("\n\n\nCeci est un nouveau Mouvement", self.x ,self.y)
         self.ConfirmBelief(MapProba)
         MapProba[self.x,self.y].L[2]=1
@@ -885,8 +901,23 @@ class Believe():
                 for i,j in zip([1,1,-1,-1],[-1,1,-1,1]):
                     if MapBelief[self.x+i, self.y+j].WallValid == 1:
                         MapBelief[self.x-i, self.y+j].run(MapProba,MapBelief)
-                        if MapBelief[self.x-i, self.y+j].L != 0:
+                        print("This is la ligne")
+
+                        if MapBelief[self.x-i, self.y+j].L[0] != 0:
                             MapBelief[self.x+i, self.y-j].run(MapProba,MapBelief)
+                            #MapBelief[self.x - i, self.y - j].run(MapProba, MapBelief) #Franck revérifie ça, ça fait nimp
+
+
+                    print("test des if ", MapBelief[self.x - i, self.y + j].L[0], MapBelief[self.x + i, self.y - j].L[0], MapBelief[self.x - i, self.y - j].L[0])
+                    """if MapBelief[self.x - i, self.y + j].L[0] == 0:
+                        print("dans le mvt x-i, y+j", self.x - i, self.y + j)
+                        MapBelief[self.x - i, self.y + j].Mouvement(MapProba, MapBelief)
+                    elif MapBelief[self.x + i, self.y - j].L[0] == 0:
+                        print("dans le mvt x+i, y-j", self.x + i, self.y - j)
+                        MapBelief[self.x + i, self.y - j].Mouvement(MapProba, MapBelief)
+                    elif MapBelief[self.x - i, self.y - j].L[0] == 0:
+                        print("dans le mvt x-i, y-j", self.x - i, self.y - j)
+                        MapBelief[self.x - i, self.y - j].Mouvement(MapProba, MapBelief)"""
                 for k in range(-2,3):
                     for l in range (-2,3):
                         if self.x + k >= 0 and self.y +l >= 0 and self.x+k <= 20 and self.y + l<= 20:
@@ -931,6 +962,15 @@ def PourcentPeople(MapBelief):
         for j in range(len(MapBelief)):
             People += MapBelief[i,j].L[1]
     Pourcent = People/TotalCase
+    return Pourcent
+
+def PourcentPeopleProba(MapProba):
+    TotalCase = 20*20
+    People = 0
+    for i in range(len(MapProba)):
+        for j in range(len(MapProba)):
+            People += MapProba[i,j].L[2]
+    Pourcent = People
     return Pourcent
 
 def PointToVisit(MapBelief):
