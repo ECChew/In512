@@ -147,10 +147,11 @@ class Believe():
         print("Straight wall ",self.x,self.y)
         Walls = [[-1,0],[1,0],[0,-1],[0,1]]
         for i,j in zip([-1,1,0,0],[0,0,-1,1]):
-            print (MapBelief[self.x+i, self.y+j].L[0],i,j, self.x+i, self.y+j)
-            if MapBelief[self.x+i, self.y+j].L[0]==0.5 or MapBelief[self.x+i, self.y+j].L[0]==0.2:
-                #print (MapBelief[self.x+i, self.y+j].L[0],i,j)
-                Walls.remove([i, j])
+            #print (MapBelief[self.x+i, self.y+j].L[0],i,j, self.x+i, self.y+j)
+            if self.x+i >=0 and self.y+j >= 0 and self.x+i < 20 and self.y+j < 20:
+                if MapBelief[self.x+i, self.y+j].L[0]==0.5 or MapBelief[self.x+i, self.y+j].L[0]==0.2:
+                    #print (MapBelief[self.x+i, self.y+j].L[0],i,j)
+                    Walls.remove([i, j])
         print("--- Walls",Walls)
         if len(Walls)==1:
             print("3 cases visite ou sure!!")
@@ -168,7 +169,7 @@ class Believe():
         for i,j in zip([-1,1,0,0],[0,0,-1,1]):
             try:
 #                print("Wallaround, i,j ", i,j , "x+i,y+j :",self.x+i, self.y+j)
-                if self.x+i >=0 and self.y+j >= 0 and self.x+i <= 20 and self.y+j <= 20 and self.L[0]==0.5:
+                if self.x+i >=0 and self.y+j >= 0 and self.x+i < 20 and self.y+j < 20 and self.L[0]==0.5:
 #                    print("La belief wall en +i , +j",i,j,MapBelief[self.x+i,self.y+j].L[0])
                     if MapBelief[self.x+i,self.y+j].L[0]< 0.5:
                         if MapProba[self.x+i, self.y+j].L[2]==1:

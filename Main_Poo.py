@@ -185,6 +185,7 @@ GridBelief[19, 13].getOut(GridProba,GridBelief)
 GridBelief[19, 12].getOut(GridProba,GridBelief)
 GridBelief[19, 11].Mouvement(GridProba,GridBelief)
 GridBelief[18, 11].Mouvement(GridProba,GridBelief)
+GridBelief[17, 10].Mouvement(GridProba,GridBelief)
 """print(GridBelief[17, 14].L)
 
 #print("-------------------------------------------------")
