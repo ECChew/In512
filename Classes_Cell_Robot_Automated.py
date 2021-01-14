@@ -21,6 +21,8 @@ def incrementCounter3():
 def incrementCounter4():
     movementCounter.mvtCounter4 += 1
 
+def addPos(x, y):
+    movementCounter.positions.append([x, y])
 
 class Cell: 
     def __init__(self, xValue, yValue):
@@ -635,10 +637,8 @@ class Believe():
                                                 MapProba[k,l].RemoveThroughWall(MapProba)
                
                                     print("Retour à la case  ", self.x, self.y)
-                                    #MapBelief[self.x, self.y].Mouvement(MapProba,MapBelief)
                                     return
                                 else:
-                                    #print("---------Raté c'est pas ici----------")
                                     MapBelief[self.x, self.y].Move(MapProba,MapBelief)
                                     self.LastPos = [self.x+i, self.y+j]
                                     return
@@ -715,7 +715,7 @@ class Believe():
             print("Je suis arrivé a la fin", self.x, self.y) 
             
             return 1, self.x, self.y
-             #self.Mouvement(MapProba,MapBelief)
+
         
                    
    
@@ -936,7 +936,7 @@ class Believe():
         
                     
     def Mouvement(self, MapProba, MapBelief,i=0,j=0):
-
+        movementCounter.addPos(self.x, self.y)
         if movementCounter.mvtCounter4 >= 1800 :
             print("Compteur de mouvement", movementCounter.mvtCounter4)
             return

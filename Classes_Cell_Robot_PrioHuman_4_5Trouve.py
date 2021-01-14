@@ -13,14 +13,12 @@ import movementCounter
 def incrementCounter():
     movementCounter.mvtCounter += 1
 
-def incrementCounter2():
-    movementCounter.mvtCounter2 += 1
+def incrementHuman():
+    movementCounter.humanCount += 1
 
-def incrementCounter3():
-    movementCounter.mvtCounter3 += 1
-def incrementCounter4():
-    movementCounter.mvtCounter4 += 1
 
+def addPos(x, y):
+    movementCounter.positions.append([x, y])
 
 class Cell: 
     def __init__(self, xValue, yValue):
@@ -103,13 +101,13 @@ class Believe():
         self.Visit = 0 
         
     def ConfirmBelief(self, Map):
-        incrementCounter2()
+
         self.L = Map[self.x, self.y].L[:2] # Found using sensor at cell
         #print("Confirm : ", self.L)
 
    
     def Prediction_Wall(self, MapProba, MapBelief):
-        incrementCounter3()
+
 #        print("-------------------------------------------------------------------------------")
 #        print ("GRIDPROBA WALL at ",self.x, self.y, " == ",self.L[0])
         if self.L[0] == 0:
@@ -459,15 +457,19 @@ class Believe():
                             print("straight wall")
                             Walls = MapBelief[self.x+i+k, self.y+j+l].StraightWall(MapBelief)
                             print ("Fin tu straght walls:", WallsPos,"===", Walls)
-                            if Walls != None and len(Walls) == 1: 
-                                WallsPos.remove(Walls[0])
-                                self.DeuxMurs(MapProba,MapBelief,WallsPos)
+                            if Walls != None and len(Walls) == 1:
+                                try :
+                                    WallsPos.remove(abs(Walls[0][1]), abs(Walls[0][0]))
+                                    self.DeuxMurs(MapProba,MapBelief,WallsPos)
+                                except :
+                                    pass
                                 break
                             else:
                                 pass
                     else:
                         print("La case ", self.x+i, self.y+j, " est safe, allons y", self.x, self.y)
                         #MapBelief[self.x+i, self.y+j].Confirm(MapProba, MapBelief)
+                        addPos(self.x+i,self.y+j)
                         return
             except:
                 pass
@@ -479,6 +481,7 @@ class Believe():
 #                    print("La belief des case autour",MapBelief[self.x+i, self.y+j].L[0], self.x+i, self.y+j)
                     if MapProba[self.x+i, self.y+j].L[2]==0 and MapBelief[self.x+i, self.y+j].L[0] != 1 :
                         print("La case ", self.x+i, self.y+j, " est safe, allons y", self.x, self.y)
+                        addPos(self.x + i, self.y + j)
                         MapBelief[self.x+i, self.y+j].run(MapProba, MapBelief)
                         break
                 except:
@@ -508,10 +511,12 @@ class Believe():
         if VerticalPosProba < HorizontalPosProba:
             WallHere = WallsPos[1]
             NoWall = WallsPos[0]
+        else :
+            WallHere = WallsPos[0]
+            NoWall = WallsPos[1]
         return WallHere, NoWall
         
     def Prediction_Human(self, MapProba, MapBelief,WallsPos):
-        incrementCounter()
         if self.L[1] == 0:
             for i in range(-2,3):
                 for j in range (-2,3):
@@ -557,6 +562,8 @@ class Believe():
             except:
                 pass
         else:
+            # Human to be saved
+
             print("-----------------------------------------------")
             print("Wow un humain à sauver en case ", self.x,", ", self.y)
             print("-----------------------------------------------")
@@ -659,6 +666,7 @@ class Believe():
                     print("0.3 Liste ",MapBelief[self.x+i, self.y+j].L)
                     if MapBelief[xreprise, yreprise].L[1]==0:
                             print ("Belief people xreprise, yreprise = 0 à ", xreprise, yreprise)
+                            addPos(xreprise, yreprise)
                             MapBelief[xreprise, yreprise].run(MapProba,MapBelief)
                             break
                             
@@ -675,11 +683,14 @@ class Believe():
             print("Pas la bonne voie")
             return 0
         else:
+            # Human saved -> remove traces on map
+            incrementHuman()
             for k in range(-2,3):
                 for l in range (-2,3):
                     if self.x + k >= 0 and self.y +l >= 0 and self.x+i+k <= 20 and self.y + j + l<= 20:
                         #print("k : ", k , "l : ", l)
                         #print("a efaccer",self.x+i+k, self.y+j+l)
+
                         print("C'est quelle position ",self.x+k, self.y+l)
                         MapProba[self.x+k, self.y+l].L[1]=0
                         MapBelief[self.x+k, self.y+l].L[1]=0
@@ -758,6 +769,7 @@ class Believe():
             print("Exploration, NextStep : ",self.x - 1 , self.y )
             MapBelief[self.x - 1 , self.y ].Mouvement(MapProba, MapBelief)
 
+
         elif Maximoum == 1:
             print("Exploration, NextStep : ",self.x + 1 , self.y )
             MapBelief[self.x + 1 , self.y ].Mouvement(MapProba, MapBelief)
@@ -767,7 +779,7 @@ class Believe():
         else:
             print("Exploration, NextStep : ",self.x  , self.y -1 )
             MapBelief[self.x , self.y - 1 ].Mouvement(MapProba, MapBelief)
-    
+
       
     def ProbabilisticWay(self, MapProba, MapBelief):
        MapProba[self.x,self.y].L[2]=1
@@ -811,6 +823,7 @@ class Believe():
             else:
                 self.BestWay, self.NextPos = minimize(self.Liste,self.Around)
                 print("ProbaWay - Next posi" ,self.NextPos)
+                addPos(self.NextPos[0], self.NextPos[1])
                 return
 
   
@@ -895,13 +908,12 @@ class Believe():
         elif maxDir == 3 :
             print(f"Get out of this area - Next position {self.x, self.y - 1}")
             self.nextpos = [self.x, self.y - 1]
+        addPos(self.nextpos[0], self.nextpos[1])
         MapBelief[self.nextpos[0], self.nextpos[1]].Mouvement(MapProba, MapBelief)
 
     def run(self, MapProba, MapBelief):
-        if movementCounter.mvtCounter4 >= 1800:
-            print("Compteur de mouvement", movementCounter.mvtCounter4)
-            return
-        incrementCounter4()
+
+        incrementCounter()
         print("\n\n\nCeci est un nouveau run", self.x ,self.y)
         MapProba[self.x, self.y].L[2] = 1
         self.ConfirmBelief(MapProba)
@@ -916,10 +928,7 @@ class Believe():
                     
     def Mouvement(self, MapProba, MapBelief,i=0,j=0):
 
-        if movementCounter.mvtCounter4 >= 1800 :
-            print("Compteur de mouvement", movementCounter.mvtCounter4)
-            return
-        incrementCounter4()
+        incrementCounter()
         print("\n\n\nCeci est un nouveau Mouvement", self.x ,self.y)
         self.ConfirmBelief(MapProba)
         MapProba[self.x,self.y].L[2]=1
@@ -966,12 +975,15 @@ class Believe():
                     elif MapBelief[self.x - i, self.y - j].L[0] == 0:
                         print("dans le mvt x-i, y-j", self.x - i, self.y - j)
                         MapBelief[self.x - i, self.y - j].Mouvement(MapProba, MapBelief)"""
+                # Human saved -> remove traces on map
+                incrementHuman()
                 for k in range(-2,3):
                     for l in range (-2,3):
                         if self.x + k >= 0 and self.y +l >= 0 and self.x+k <= 20 and self.y + l<= 20:
                             #print("k : ", k , "l : ", l)
                             #print("a efaccer",self.x+i+k, self.y+j+l)
                             print("C'est quelle position ",self.x+k-1, self.y+l-1)
+
                             MapProba[self.x+k-1, self.y+l-1].L[1]=0
                             MapBelief[self.x+k-1, self.y+l-1].L[1]=0
                             #MapBelief[self.x+i, self.y+j].ConfirmBelief(MapProba)
