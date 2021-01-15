@@ -108,13 +108,15 @@ class Believe():
         self.Visit = 0
         self.hitWall = 0
 
+#Take the information of the GridProba
     def ConfirmBelief(self, Map):
-
+        #
         self.L = Map[self.x, self.y].L[:2]  # Found using sensor at cell
         # print("Confirm : ", self.L)
 
-    def Prediction_Wall(self, MapProba, MapBelief):
-
+#Spread or not the wall, depending on the cell it is  
+    def Prediction_Wall(self, MapProba, MapBelief): 
+        
         #        print("-------------------------------------------------------------------------------")
         #        print ("GRIDPROBA WALL at ",self.x, self.y, " == ",self.L[0])
         if self.L[0] == 0:
@@ -148,8 +150,10 @@ class Believe():
             print("Wall hit ", self.x, ", ", self.y)
             print("-------------------------------------------------")
 
+
+#try to find a straight wall if 3 cells safe around it
     def StraightWall(self, MapBelief):
-        print("Straight wall ", self.x, self.y)
+        #print("Straight wall ", self.x, self.y)
         Walls = [[-1, 0], [1, 0], [0, -1], [0, 1]]
         for i, j in zip([-1, 1, 0, 0], [0, 0, -1, 1]):
             # print (MapBelief[self.x+i, self.y+j].L[0],i,j, self.x+i, self.y+j)
@@ -157,9 +161,9 @@ class Believe():
                 if MapBelief[self.x + i, self.y + j].L[0] == 0.5 or MapBelief[self.x + i, self.y + j].L[0] == 0.2:
                     # print (MapBelief[self.x+i, self.y+j].L[0],i,j)
                     Walls.remove([i, j])
-        print("--- Walls", Walls)
+        #print("--- Walls", Walls)
         if len(Walls) == 1:
-            print("3 cases visite ou sure!!")
+            #print("3 cases visite ou sure!!")
             MapBelief[self.x + Walls[0][0], self.y + Walls[0][1]].L[0] = 1
             MapBelief[self.x + 2 * Walls[0][0], self.y + 2 * Walls[0][1]].L[0] = 1
             MapBelief[self.x + Walls[0][0], self.y + Walls[0][1]].WallValid = 1
@@ -167,6 +171,7 @@ class Believe():
 
             return Walls
 
+#Count the number of wall around the cell, between 0 and 3
     def WallAround(self, MapProba, MapBelief):
         Diag = []
         self.WallsPos = []
@@ -200,13 +205,9 @@ class Believe():
                     self.WallsPos.append([i, j])
             except:
                 pass
-        for n in range(len(self.WallsPos)):
-            try:
-                print("Wallfound", self.x + self.WallsPos[n][0], self.y + self.WallsPos[n][1])
-            except:
-                pass
         return len(self.WallsPos), self.WallsPos
 
+#Use a different method depending on the number of wall around
     def Nothing_Wall(self, MapProba, MapBelief, WallsPos):
         if len(WallsPos) == 2:
             self.DeuxMurs(MapProba, MapBelief, WallsPos)
@@ -215,6 +216,7 @@ class Believe():
         else:
             self.UnOuZeroMur(MapProba, MapBelief, WallsPos)
 
+#Find a wall pattern
     def ASpecificPattern(self, MapProba, MapBelief):
         Pourcent = PourcentPeople(MapBelief)
         for i, j in zip([-2, -2, 2, 2, -1, -1, 1, 1], [-1, 1, -1, 1, -2, 2, -2, 2]):
@@ -222,7 +224,7 @@ class Believe():
                 if MapBelief[self.x + i, self.y + j].WallValid == 1:
 
                     if i == 2:
-                        print("Specific Pattern - la case ", self.x + 1, self.y, " est sure")
+                        #print("Specific Pattern - la case ", self.x + 1, self.y, " est sure")
                         MapBelief[self.x + 1, self.y].L[0] = 0.2
                         MapBelief[self.x + 1, self.y - j].L[0] = 0.2
                         MapBelief[self.x + 1, self.y - 2 * j].L[0] = 0.2
@@ -231,7 +233,7 @@ class Believe():
                             MapBelief[self.x + 1, self.y].run(MapProba, MapBelief)
                             break
                     elif i == -2:
-                        print("Specific Pattern - la case ", self.x - 1, self.y, " est sure")
+                        #print("Specific Pattern - la case ", self.x - 1, self.y, " est sure")
                         MapBelief[self.x - 1, self.y].L[0] = 0.2
                         MapBelief[self.x - 1, self.y - j].L[0] = 0.2
                         MapBelief[self.x - 1, self.y - 2 * j].L[0] = 0.2
@@ -241,7 +243,7 @@ class Believe():
 
                             break
                     elif j == 2:
-                        print("Specific Pattern - la case ", self.x, self.y + 1, " est sure")
+                        #print("Specific Pattern - la case ", self.x, self.y + 1, " est sure")
                         MapBelief[self.x, self.y + 1].L[0] = 0.2
                         MapBelief[self.x - i, self.y + 1].L[0] = 0.2
                         MapBelief[self.x - 2 * i, self.y + 1].L[0] = 0.2
@@ -250,7 +252,7 @@ class Believe():
                             MapBelief[self.x, self.y + 1].run(MapProba, MapBelief)
                             break
                     elif j == -2:
-                        print("Specific Pattern - la case ", self.x, self.y - 1, " est sure")
+                        #print("Specific Pattern - la case ", self.x, self.y - 1, " est sure")
                         MapBelief[self.x, self.y - 1].L[0] = 0.2
                         MapBelief[self.x - i, self.y - 1].L[0] = 0.2
                         MapBelief[self.x - 2 * i, self.y - 1].L[0] = 0.2
@@ -263,6 +265,7 @@ class Believe():
             except:
                 pass
 
+#Method use if their is one/zero wall around
     def UnOuZeroMur(self, MapProba, MapBelief, WallsPos):
         if len(WallsPos) == 1:
             MapBelief[self.x + WallsPos[0][0], self.y + WallsPos[0][1]].ASpecificPattern(MapProba, MapBelief)
@@ -298,11 +301,11 @@ class Believe():
                     except:
                         pass
         elif WallsPos == []:
-            print("nothing is Empty")
+            #print("nothing is Empty")
             for i, j in zip([-1, 1, 0, 0], [0, 0, -1, 1]):
                 # print("i - j :",i, j)
                 if MapBelief[self.x + i, self.y + j].L[0] == 0.2:
-                    print("i - j :", i, j, self.x + i, self.y + j)
+                    #print("i - j :", i, j, self.x + i, self.y + j)
                     MapBelief[self.x + i, self.y + j].L[0] = 1
                     MapBelief[self.x + i, self.y + j].WallValid = 1
                     WallsPos.append([i, j])
@@ -314,6 +317,7 @@ class Believe():
                         for k in [-2, -1, 0, 1, 2]:
                             MapBelief[self.x + 2 * i, self.y + k].L[1] = 1
 
+#Method use if 2 walls around
     def DeuxMurs(self, MapProba, MapBelief, WallsPos):
 
         # Deux cas possible, les murs sont en diagonale => 1 mur existant , lautre est faux
@@ -358,14 +362,14 @@ class Believe():
                             return
             else:
                 if MapProba[self.x + 1, self.y].L[2] == 0:
-                    print(self.x + 1, self.y, "N'a pas ete explorer")
+#                    print(self.x + 1, self.y, "N'a pas ete explorer")
                     MapBelief[self.x + 1, self.y].Longueur += self.Longueur
                     if MapBelief[self.x + 1, self.y].Longueur == 3:
                         MapBelief[self.x + 1, self.y].Longueur3(MapProba, MapBelief)
                     else:
                         MapBelief[self.x + 1, self.y].run(MapProba, MapBelief)
                 else:
-                    print(self.x - 1, self.y, "N'a pas ete explorer")
+#                    print(self.x - 1, self.y, "N'a pas ete explorer")
                     MapBelief[self.x - 1, self.y].Longueur += self.Longueur
                     if MapBelief[self.x - 1, self.y].Longueur == 3:
                         MapBelief[self.x - 1, self.y].Longueur3(MapProba, MapBelief)
@@ -396,14 +400,13 @@ class Believe():
 
             elif MapProba[self.x - WallsPos[0][0], self.y - WallsPos[0][1]].L[2] == 0 and \
                     MapProba[self.x - WallsPos[1][0], self.y - WallsPos[1][1]].L[2] == 0:
-                print("Two unexplored cells")
+                #print("Two unexplored cells")
                 if MapProba[self.x - WallsPos[0][0], self.y - WallsPos[0][1]].L[2] == 0:
                     MapBelief[self.x - WallsPos[0][0], self.y - WallsPos[0][1]].run(MapProba, MapBelief)
                     MapBelief[WallsPos[1][0], WallsPos[1][1]].run(MapProba, MapBelief)
-                    if MapBelief[WallsPos[1][0], WallsPos[1][1]].L[0] == 0 and \
-                            MapBelief[self.x - WallsPos[0][0], self.y - WallsPos[0][1]].L[0] == 0:
-                        print("Wall cell", self.x - WallsPos[0][0] - WallsPos[1][0],
-                              self.y - WallsPos[0][1] - WallsPos[1][1])
+#                    if MapBelief[WallsPos[1][0], WallsPos[1][1]].L[0] == 0 and \
+#                            MapBelief[self.x - WallsPos[0][0], self.y - WallsPos[0][1]].L[0] == 0:
+#                        #print("Wall cell", self.x - WallsPos[0][0] - WallsPos[1][0],self.y - WallsPos[0][1] - WallsPos[1][1])
 
             else:
 
@@ -413,42 +416,44 @@ class Believe():
                         return
 
                 WallHere, NoWall = self.ProbaNoWall(MapProba, MapBelief, WallsPos)
-                print("Un wall est posé en ", self.x + WallHere[0], self.y + WallHere[1], " et pas de wall en ",
-                      self.x + NoWall[0], self.y + NoWall[1])
+                #print("Un wall est posé en ", self.x + WallHere[0], self.y + WallHere[1], " et pas de wall en ",self.x + NoWall[0], self.y + NoWall[1])
                 WallsPos.remove(NoWall)
 
                 MapBelief[self.x + NoWall[0], self.y + NoWall[1]].L[0] = 0
-                print("Jai trouver une sortie")
+                #print("Jai trouver une sortie")
 
+#Get out of the wall if it stick for more than 3 cells
     def Longueur3(self, MapProba, MapBelief):
         self.run(MapProba, MapBelief)
         self.PréLongueur3(MapProba, MapBelief)
-        print("==================Longueur = 3", self.x, self.y)
+#        print("==================Longueur = 3", self.x, self.y)
         for i, j in zip([-1, 1, 0, 0], [0, 0, -1, 1]):
             if MapBelief[self.x + i, self.y + j].WallValid == 1:
-                print("==================Longueur = 3 et je vais en ", self.x - i, self.y - j)
+#                print("==================Longueur = 3 et je vais en ", self.x - i, self.y - j)
 
                 MapBelief[self.x - i, self.y - j].run(MapProba, MapBelief)
                 break
 
     def PréLongueur3(self, MapProba, MapBelief):
-        print("Prelongueur", self.x, self.y)
+        #print("Prelongueur", self.x, self.y)
         for i, j in zip([-3, -3, 3, 3, -1, -1, 1, 1], [-1, 1, -1, 1, -3, 3, -3, 3]):
-            print("case : ", self.x + i, self.y + j, MapBelief[self.x + i, self.y + j].WallValid)
+            #print("case : ", self.x + i, self.y + j, MapBelief[self.x + i, self.y + j].WallValid)
             if MapBelief[self.x + i, self.y + j].WallValid == 1:
                 MapBelief[self.x + i, self.y + j].StraightWall(MapBelief)
 
+
+#Method use if there is 3 walls around
     def TroisMurs(self, MapProba, MapBelief, WallsPos):
         Walls = []
-        print("3 walls")
+        #print("3 walls")
         for i, j in zip([-1, -1, 1, 1], [-1, 1, -1, 1]):
             try:
                 if MapProba[self.x + i, self.y + j].L[2] == 0 and MapBelief[self.x + i, self.y + j].L[0] != 1:
                     if MapBelief[self.x + i, self.y + j].L[0] == 0.2:
                         for k, l in zip([-1, 1, 0, 0], [0, 0, -1, 1]):
-                            print("straight wall")
+                            #print("straight wall")
                             Walls = MapBelief[self.x + i + k, self.y + j + l].StraightWall(MapBelief)
-                            print("Fin tu straght walls:", WallsPos, "===", Walls)
+                            #print("Fin tu straght walls:", WallsPos, "===", Walls)
                             if Walls != None and len(Walls) == 1:
                                 try:
                                     WallsPos.remove(abs(Walls[0][1]), abs(Walls[0][0]))
@@ -465,7 +470,7 @@ class Believe():
             except:
                 pass
 
-        print("ici?", self.x, self.y)
+        #print("ici?", self.x, self.y)
         for i in range(-1, 2):
             for j in range(-1, 2):
                 try:
@@ -477,6 +482,7 @@ class Believe():
                 except:
                     pass
 
+#Method use if there is 2 walls in diagonal
     def ProbaNoWall(self, MapProba, MapBelief, WallsPos):
         VerticalPosProba = 0.5
         HorizontalPosProba = 0.5
@@ -504,6 +510,9 @@ class Believe():
             NoWall = WallsPos[1]
         return WallHere, NoWall
 
+
+
+#Spread the human temperature
     def Prediction_Human(self, MapProba, MapBelief, WallsPos):
         if self.L[1] == 0:
             for i in range(-2, 3):
@@ -558,73 +567,12 @@ class Believe():
         if self.L == [0.5, 0.3] or self.L == [0.5, 0]:
             self.Nothing_Wall(MapProba, MapBelief, WallsPos)
 
-    def HumanAround(self, MapProba, MapBelief):  # If there is a human around use this method
-        self.run(MapProba, MapBelief)
-        MapProba[self.x, self.y].L[2] = 1
 
-        self.Around = []
-        self.Liste = []
-        self.LastPos = []
-
-        if self.L[1] == 0.3:
-            print("\n=========Human Around=====[", self.x, self.y, "]===")
-            for i, j in zip([-1, -1, 1, 1], [-1, 1, -1, 1]):
-                try:
-                    if self.x + i >= 0 and self.y + j >= 0 and self.x + i <= 20 and self.y + j <= 20:
-                        if MapProba[self.x + i, self.y + j].L[2] != 1 and MapBelief[self.x + i, self.y + j].L[0] != 1:
-                            MapBelief[self.x, self.y].ConfirmBelief(MapProba)
-                            if self.L == [0, 0]:
-                                return
-                            else:
-                                MapBelief[self.x + i, self.y + j].HumanAround(MapProba, MapBelief)
-
-                            if MapBelief[self.x + i, self.y + j].L[1] == 0.6:
-                                return
-                except:
-                    pass
-
-        if self.L[1] == 0.6:
-            print("\n=========Human Around==0,6===[", self.x, self.y, "]===")
-            for i in range(-1, 2):
-                for j in range(-1, 2):
-                    # print("i : ", i, "j : ", j)
-                    try:
-
-                        if self.x + i >= 0 and self.y + j >= 0 and self.x + i <= 20 and self.y + j <= 20:
-                            if MapProba[self.x + i, self.y + j].L[2] != 1 and MapBelief[self.x + i, self.y + j].L[
-                                0] != 1:
-                                print("Visitons la case :", self.x + i, self.y + j, "depuis la case ", self.x, self.y,
-                                      "avec ", i, j)
-                                MapBelief[self.x + i, self.y + j].HumanAround(MapProba, MapBelief)
-
-                                MapProba[self.x + i, self.y + j].L[2] = 1
-                                if MapBelief[self.x + i, self.y + j].L[1] == 1:
-                                    for k in range(-2, 3):
-                                        for l in range(-2, 3):
-                                            if self.x + i + k >= 0 and self.y + j + l >= 0 and self.x + i + k <= 20 and self.y + j + l <= 20:
-                                                # print("k : ", k , "l : ", l)
-                                                # print("a efaccer",self.x+i+k, self.y+j+l)
-                                                MapProba[self.x + i + k, self.y + j + l].L[1] = 0
-                                                self.ConfirmBelief(MapProba)
-                                    for k in range(len(MapProba)):
-                                        for l in range(len(MapProba)):
-                                            if MapProba[k, l].L[1] == 1:
-                                                MapProba[k, l].Set_Human(MapProba)
-                                                MapProba[k, l].RemoveThroughWall(MapProba)
-
-                                    print("Retour à la case  ", self.x, self.y)
-                                    return
-                                else:
-                                    MapBelief[self.x, self.y].Move(MapProba, MapBelief)
-                                    self.LastPos = [self.x + i, self.y + j]
-                                    return
-                    except:
-                        pass
-
+#Check the value around if it sense a human temperature = 0.3
     def CheckValue03(self, MapProba, MapBelief):
         self.run(MapProba, MapBelief)
         MapProba[self.x, self.y].L[2] = 1
-        print("Check Value 0.3 ------", self.x, self.y, "------", self.L)
+#        print("Check Value 0.3 ------", self.x, self.y, "------", self.L)
         if self.L[1] == 0.6:
             print("Je me rapproche il est a une case de ", self.x, self.y)
             xreprise, yreprise = self.Human_Around_06(MapProba, MapBelief)
@@ -632,34 +580,38 @@ class Believe():
         else:
             return None, None
 
+
     def Human_Around_03(self, MapProba, MapBelief):
         self.run(MapProba, MapBelief)
         MapProba[self.x, self.y].L[2] = 1
         for i, j in zip([-1, -1, 1, 1], [-1, 1, -1, 1]):
 
             try:
-                print("0.3 Si i=", i, "et j=", j, "x+i = ", self.x + i, "y+j = ", self.y + j)
+#                print("0.3 Si i=", i, "et j=", j, "x+i = ", self.x + i, "y+j = ", self.y + j)
                 if MapProba[self.x + i, self.y + j].L[2] == 0 and MapBelief[self.x + i, self.y + j].L[0] != 1:
-                    print("Je satisfais les conditions")
+                    #print("Je satisfais les conditions")
                     xreprise, yreprise = MapBelief[self.x + i, self.y + j].CheckValue03(MapProba, MapBelief)
-                    print("0.3 Liste ", MapBelief[self.x + i, self.y + j].L)
+                    #print("0.3 Liste ", MapBelief[self.x + i, self.y + j].L)
                     if MapBelief[xreprise, yreprise].L[1] == 0:
-                        print("Belief people xreprise, yreprise = 0 à ", xreprise, yreprise)
+#                        print("Belief people xreprise, yreprise = 0 à ", xreprise, yreprise)
                         addPos(xreprise, yreprise)
                         MapBelief[xreprise, yreprise].run(MapProba, MapBelief)
                         break
 
                 else:
-                    print("Je ne les respecte pas ")
+                    pass
+                    #print("Je ne les respecte pas ")
             except:
                 pass
 
+
+#Check the value around if it sense a human temperature = 0.3
     def CheckValue06(self, MapProba, MapBelief, i=0, j=0):
         self.run(MapProba, MapBelief)
         MapProba[self.x, self.y].L[2] = 1
-        print("Check Value 0.6 ------", self.x, self.y, "------", self.L)
+        #print("Check Value 0.6 ------", self.x, self.y, "------", self.L)
         if self.L[1] != 1:
-            print("Pas la bonne voie")
+            #print("Pas la bonne voie")
             return 0
         else:
             incrementHuman()
@@ -685,19 +637,19 @@ class Believe():
         for i in range(-1, 2):
             for j in range(-1, 2):
                 try:
-                    print("\nSi i=", i, "et j=", j, "x+i = ", self.x + i, "y+j = ", self.y + j, "[", self.x, self.y,
-                          "]")
+                    #print("\nSi i=", i, "et j=", j, "x+i = ", self.x + i, "y+j = ", self.y + j, "[", self.x, self.y,"]")
                     if MapProba[self.x + i, self.y + j].L[2] == 0 and MapBelief[self.x + i, self.y + j].L[0] != 1:
-                        print("Je satisfais les conditions je vais en", self.x + i, self.y + j)
+                        #print("Je satisfais les conditions je vais en", self.x + i, self.y + j)
                         Found, xreprise, yreprise = MapBelief[self.x + i, self.y + j].CheckValue06(MapProba, MapBelief,
                                                                                                    i, j)
-                        print("Liste ", MapBelief[self.x + i, self.y + j].L, "Found ", Found)
+                        #print("Liste ", MapBelief[self.x + i, self.y + j].L, "Found ", Found)
 
                         if MapBelief[self.x + i, self.y + j].L[1] == 0:
-                            print("Belief human = 0 autour de ", self.x, self.y)
+                            #print("Belief human = 0 autour de ", self.x, self.y)
                             return xreprise, yreprise
                     else:
-                        print("Je ne satisfais pas les conditions je ne vais pas en", self.x + i, self.y + j)
+                        pass
+                        #print("Je ne satisfais pas les conditions je ne vais pas en", self.x + i, self.y + j)
                 except:
                     continue
             if Found == 0:
@@ -705,9 +657,11 @@ class Believe():
             else:
                 break
 
+
+#Explore a direction if no information on the cell [0,0]
     def GoExplore(self, MapProba, MapBelief):
         MapProba[self.x, self.y].L[2] = 1
-        print("\n=========Exploration=====[", self.x, self.y, " ]===")
+        #print("\n=========Exploration=====[", self.x, self.y, " ]===")
         # [Haut, Bas, Droite, Gauche]
         # print("Exploration")
         self.Direction = [0, 0, 0, 0]
@@ -721,31 +675,34 @@ class Believe():
             self.Direction[3] += 1.5 * MapBelief[self.x, i].L[1] - MapBelief[self.x, i].L[0]
 
         Maximoum = self.Direction.index(max(self.Direction))
-        print("Direction", self.Direction, Maximoum, self.x, self.y)
+        #print("Direction", self.Direction, Maximoum, self.x, self.y)
         if Maximoum == 0:
-            print("Exploration, NextStep : ", self.x - 1, self.y)
+#            print("Exploration, NextStep : ", self.x - 1, self.y)
             hit = MapBelief[self.x - 1, self.y].Mouvement(MapProba, MapBelief)
             if hit:
                 return
 
         elif Maximoum == 1:
-            print("Exploration, NextStep : ", self.x + 1, self.y)
+#            print("Exploration, NextStep : ", self.x + 1, self.y)
             hit = MapBelief[self.x + 1, self.y].Mouvement(MapProba, MapBelief)
             if hit:
                 return
         elif Maximoum == 2:
-            print("Exploration, NextStep : ", self.x, self.y + 1)
+#            print("Exploration, NextStep : ", self.x, self.y + 1)
             hit = MapBelief[self.x, self.y + 1].Mouvement(MapProba, MapBelief)
             if hit:
                 return
         else:
-            print("Exploration, NextStep : ", self.x, self.y - 1)
+#            print("Exploration, NextStep : ", self.x, self.y - 1)
             hit = MapBelief[self.x, self.y - 1].Mouvement(MapProba, MapBelief)
             if hit:
                 return
+            
+            
+#Find the cell with the lowest probability of wall
     def ProbabilisticWay(self, MapProba, MapBelief):
         MapProba[self.x, self.y].L[2] = 1
-        print("\n=========ProbaWay====[", self.x, self.y, " ]====")
+        #print("\n=========ProbaWay====[", self.x, self.y, " ]====")
         self.Around = []
         self.Liste = []
         Compteur = 0
@@ -781,10 +738,6 @@ class Believe():
                 addPos(self.NextPos[0], self.NextPos[1])
                 return
 
-    def CaseToVisit(self, MapBelief):
-        Visite = PointToVisit(MapBelief)
-        for i in range(len(Visite)):
-            MapBelief[Visite[i][0], Visite[i][1]].Visit = 1
 
     def getOut(self, MapProba, MapBelief):
         """
@@ -825,16 +778,16 @@ class Believe():
                 self.Direction[1] = -1
         maxDir = self.Direction.index(max(self.Direction))
         if maxDir == 0:
-            print(f"Get out of this area - Next position {self.x - 1, self.y}")
+#            print(f"Get out of this area - Next position {self.x - 1, self.y}")
             self.nextpos = [self.x - 1, self.y]
         elif maxDir == 1:
-            print(f"Get out of this area - Next position {self.x + 1, self.y}")
+#            print(f"Get out of this area - Next position {self.x + 1, self.y}")
             self.nextpos = [self.x + 1, self.y]
         elif maxDir == 2:
-            print(f"Get out of this area - Next position {self.x, self.y + 1}")
+#            print(f"Get out of this area - Next position {self.x, self.y + 1}")
             self.nextpos = [self.x, self.y + 1]
         elif maxDir == 3:
-            print(f"Get out of this area - Next position {self.x, self.y - 1}")
+#            print(f"Get out of this area - Next position {self.x, self.y - 1}")
             self.nextpos = [self.x, self.y - 1]
         addPos(self.nextpos[0], self.nextpos[1])
         hit = MapBelief[self.nextpos[0], self.nextpos[1]].Mouvement(MapProba, MapBelief)
@@ -902,7 +855,7 @@ class Believe():
                         if MapProba[k, l].L[1] == 1:
                             MapProba[k, l].Set_Human(MapProba)
                             MapProba[k, l].RemoveThroughWall(MapProba)
-                print("Je suis arrivé a la fin", self.x, self.y)
+                #print("Je suis arrivé a la fin", self.x, self.y)
             else:
                 self.ProbabilisticWay(MapProba, MapBelief)
         return 0
@@ -924,51 +877,6 @@ def PourcentPeople(MapBelief):
     return Pourcent
 
 
-def PointToVisit(MapBelief):
-    ToVisit = []
-    autour = 0
-    n = 0
-    for i in range(20):
-        for j in range(20):
-            print(i, j)
-            if MapBelief[i, j].L[1] >= 1e-9:
-                n += 1
-                try:
-                    autour = 0
-                    for k in range(-2, 3):
-                        for l in range(-2, 3):
-                            print("--", k, l, i + k, j + l)
-                            if i + k >= 0 and j + l >= 0 and i + k < 20 and j + l < 20:
-                                print(i + k, j + l, MapBelief[i + k, j + l].L[1])
-                                autour += MapBelief[i + k, j + l].L[1]
-                    print("Jsuis ici?", n, "i,j = ", i, j, autour)
-                    if autour >= 8:
-                        ToVisit.append([i, j])
-
-                except:
-                    pass
-    #    print(ToVisit)
-    return ToVisit
-
-
-def SplitInto4Zone(MapBelief, ToVisit):
-    ZoneHG = []
-    ZoneHD = []
-    for n in range(len(ToVisit)):
-        if ToVisit[n][0] >= 0 and ToVisit[n][0] <= 9 and ToVisit[n][1] >= 0 and ToVisit[n][1] <= 9:
-            pass
-
-
-def Point(MapBelief, x, y):
-    autour = 0
-    for k in range(-2, 3):
-        for l in range(-2, 3):
-            print("--", k, l, x + l, y + k)
-            if x + k >= 0 and y + l >= 0 and x + k < 20 and y + l < 20:
-                print(x + k, y + l, MapBelief[x + k, y + l].L[1])
-                autour += MapBelief[x + k, y + l].L[1]
-    print(autour)
-
 
 def findMaxL_Human(L1, L2):
     maxlist = []
@@ -985,9 +893,9 @@ def findMaxL_Wall(L1, L2):
 
 
 def minimize(LBelief, LPos):
-    print("-----------------------------")
-    print("LBelief ", LBelief)
-    print("LPos ", LPos)
+    #print("-----------------------------")
+    #print("LBelief ", LBelief)
+    #print("LPos ", LPos)
     Index = 0
     Priorite = 0
     nbr05 = 0
@@ -998,20 +906,20 @@ def minimize(LBelief, LPos):
         if LBelief[i][0] == 0.5:
             nbr05 += 1
     if nbr05 >= 3:
-        print("Nombre 0,5")
+        #print("Nombre 0,5")
         for i in range(len(LBelief)):
             if LBelief[i][0] == 0.5:
                 liste05.append(LPos[i])
                 listepos.append(i)
-        print(liste05, listepos, len(liste05) // 2)
-        print("aaaaa", liste05[len(liste05) // 2], listepos[len(liste05) // 2])
+        #print(liste05, listepos, len(liste05) // 2)
+        #print("aaaaa", liste05[len(liste05) // 2], listepos[len(liste05) // 2])
         return listepos[-1], liste05[-1]
 
     else:
         for i in range(len(LBelief)):
             if LBelief[i][0] < 0.001 and LBelief[i][0] > 1e-9:
                 Priorite += 1
-        print("Priorite = : ", Priorite)
+        #print("Priorite = : ", Priorite)
         if Priorite == 0:
             Lowest = 1
 
@@ -1020,7 +928,7 @@ def minimize(LBelief, LPos):
                     Lowest = LBelief[i][0]
                     Index = i
 
-            print("---Low---", Lowest, Index, LPos[Index])
+            #print("---Low---", Lowest, Index, LPos[Index])
             return Lowest, LPos[Index]
         elif Priorite == 2 or Priorite == 1:
             # print("Priorite = : ", Priorite)
