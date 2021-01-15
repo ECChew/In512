@@ -29,10 +29,11 @@ class Cell:
         #Position de la cell
         self.x = xValue
         self.y = yValue
+
         
     #Spread the information of a human 2 cells around
     def Set_Human(self, Map):
-        self.L = findMaxL_Human([0, 1, 0], self.L) 
+        self.L = findMaxL_Human([0, 1, 0], self.L)
         self.ListWall = []
         self.ListHuman = []
         for i in range(-1,2):
@@ -58,7 +59,7 @@ class Cell:
                 
     # Spread the information of a wall 1 cell around 
     def Set_Wall(self, Map):
-        self.L = [1, 0, 0, 1]
+        self.L = findMaxL_Wall([1, 0, 0], self.L)
         
         for i in range(-1,2):
             for j in range (-1,2):
@@ -100,7 +101,8 @@ class Believe():
         self.HumanFound = []
         self.WallValid = 0
         self.Longueur=1
-        self.Visit = 0 
+        self.Visit = 0
+        self.hitWall = 0
         
     def ConfirmBelief(self, Map):
 
@@ -137,11 +139,13 @@ class Believe():
                                     MapBelief[max(self.x + i,0), max(self.y + j, 0)].L[0] *= 1
                     except:
                         pass
-        else: 
+        else:
+
             print("-------------------------------------------------")
             print("Wall hit ", self.x,", ", self.y)
             print("-------------------------------------------------")
-            #sys.exit()
+
+
     
     def StraightWall(self,MapBelief):
         print("Straight wall ",self.x,self.y)
@@ -272,9 +276,7 @@ class Believe():
                     try:
                         if self.x+k >=0 and self.y+2*WallsPos[0][1] >= 0 and self.x+k <= 20 and self.y+2*WallsPos[0][1] <= 20 :
                             if MapBelief[self.x+k , self.y+2*WallsPos[0][1]].WallValid != 1 or MapProba[self.x+k , self.y+2*WallsPos[0][1]].L[2]==0 :
-                                print("Il a peut etre un humain derriere", self.x+k , self.y+2*WallsPos[0][1])
                                 MapBelief[self.x+k , self.y+2*WallsPos[0][1]].L[1]=1
-                            print(self.x, self.y, "Jai posé un mur", self.x , self.y+WallsPos[0][1])
                             MapBelief[self.x , self.y+WallsPos[0][1]].WallValid = 1
                             MapBelief[self.x , self.y+2*WallsPos[0][1]].L[0]=0.2
                             
@@ -289,9 +291,7 @@ class Believe():
                     try:
                         if self.x+2*WallsPos[0][0] >=0 and self.y+k >= 0 and self.x+2*WallsPos[0][0] <= 20 and self.y+k <= 20:
                             if MapBelief[self.x+2*WallsPos[0][0] , self.y+k].WallValid != 1 :
-                                print("Il a peut etre un humain derriere", self.x+2*WallsPos[0][0] , self.y+k)
                                 MapBelief[self.x+2*WallsPos[0][0] , self.y+k].L[1]=1
-                            print(self.x, self.y, "Jai posé un mur--", self.x+WallsPos[0][0] , self.y)
                             MapBelief[self.x+WallsPos[0][0] , self.y].WallValid = 1
                             MapBelief[self.x+2*WallsPos[0][0] , self.y].L[0]=0.2
                             #MapBelief[self.x+WallsPos[0][0] , self.y].StraightWall(MapBelief)
@@ -800,8 +800,8 @@ class Believe():
         """
         # [Haut, Bas, Droite, Gauche]
 
-        self.coefExp = 2
-        self.coefWall = 1
+        self.coefExp = 5
+        self.coefWall = 2
         self.Direction = [0, 0, 0, 0]
         # Left
         for j in range(0, self.y):
@@ -845,11 +845,10 @@ class Believe():
         MapBelief[self.nextpos[0], self.nextpos[1]].Mouvement(MapProba, MapBelief)
 
     def run(self, MapProba, MapBelief):
-
         incrementCounter()
         MapProba[self.x, self.y].L[2] = 1
         self.ConfirmBelief(MapProba)
-        self.Prediction_Wall(MapProba, MapBelief)
+        hit = self.Prediction_Wall(MapProba, MapBelief)
         nbrWalls,WallsPos = self.WallAround(MapProba,MapBelief)
         self.Prediction_Human(MapProba, MapBelief,WallsPos)
         self.ConfirmBelief(MapProba) # We reconfirm as the predictions will also predict on the case we are on
@@ -858,12 +857,15 @@ class Believe():
         
                     
     def Mouvement(self, MapProba, MapBelief,i=0,j=0):
-
         incrementCounter()
         print("\n\n\nNew Mouvement", self.x ,self.y)
+        if MapProba[self.x, self.y].L[0] == 1:
+            self.hitWall = 1
+            print("damn", self.x, self.y, self.hitWall)
+            return 1
         self.ConfirmBelief(MapProba)
         MapProba[self.x,self.y].L[2]=1
-        self.Prediction_Wall(MapProba, MapBelief)
+        hit = self.Prediction_Wall(MapProba, MapBelief)
         nbrWalls,WallsPos = self.WallAround(MapProba,MapBelief)
         if nbrWalls == 3 and self.L[1]==0:
             self.TroisMurs(MapProba,MapBelief,WallsPos)
@@ -905,7 +907,7 @@ class Believe():
                 print("Je suis arrivé a la fin", self.x, self.y) 
             else:
                 self.ProbabilisticWay( MapProba, MapBelief)
-
+        return 0
                 
 
             
@@ -927,14 +929,6 @@ def PourcentPeople(MapBelief):
     Pourcent = People/TotalCase
     return Pourcent
 
-def PourcentPeopleProba(MapProba):
-    TotalCase = 20*20
-    People = 0
-    for i in range(len(MapProba)):
-        for j in range(len(MapProba)):
-            People += MapProba[i,j].L[2]
-    Pourcent = People
-    return Pourcent
 
 def PointToVisit(MapBelief):
     ToVisit=[]
