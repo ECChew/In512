@@ -98,7 +98,7 @@ for i in range(20):
 GridBelief[15,1].Mouvement(GridProba, GridBelief)
 counterFig = 0
 saved = False
-for _ in range(48):
+for _ in range(47):
 
     savemvt = movementCounter.mvtCounter
     lenpos = len(movementCounter.positions)
@@ -125,132 +125,8 @@ for _ in range(48):
 
 
 
-#
-##Avance d'une case
-"""
-GridBelief[14,1].Mouvement(GridProba, GridBelief)
-GridBelief[13,1].Mouvement(GridProba, GridBelief)
-GridBelief[12,1].Mouvement(GridProba, GridBelief)
-GridBelief[11,1].Mouvement(GridProba, GridBelief)
-GridBelief[10,1].Mouvement(GridProba, GridBelief)
-GridBelief[9,1].Mouvement(GridProba, GridBelief)
-GridBelief[8,1].Mouvement(GridProba, GridBelief)
-GridBelief[7,1].Mouvement(GridProba, GridBelief)
-GridBelief[6,1].Mouvement(GridProba, GridBelief)
-GridBelief[5,1].Mouvement(GridProba, GridBelief)
-GridBelief[4,1].Mouvement(GridProba, GridBelief)
-GridBelief[3,1].Mouvement(GridProba, GridBelief)
-#
-###
-###
-GridBelief[1,1].Mouvement(GridProba, GridBelief)
-##print("-------------------------------------------------\n\n\n")
-GridBelief[0,2].Mouvement(GridProba, GridBelief)
-###GridBelief[1,1].Mouvement(GridProba, GridBelief)
-###
-####
-###GridBelief[0,1].Mouvement(GridProba, GridBelief)
-#####
-#####print("-------------------------------------------------\n\n\n")
-GridBelief[1,5].Mouvement(GridProba, GridBelief)
-########GridBelief[4,5].Mouvement(GridProba, GridBelief)
-########print("-------------------------------------------------\n\n\n")
-GridBelief[4,6].Mouvement(GridProba, GridBelief)
-############print("-------------------------------------------------\n\n\n")
-GridBelief[4,7].Mouvement(GridProba, GridBelief)
-GridBelief[4,8].Mouvement(GridProba, GridBelief)
-###########print("-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n")
-GridBelief[3,7].Mouvement(GridProba, GridBelief)
-###########print("-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n\n")
-GridBelief[0,8].Mouvement(GridProba, GridBelief)
-GridBelief[3,9].Mouvement(GridProba, GridBelief)
-######print("-------------------------------------------------\n\n\n")
-GridBelief[2,10].Mouvement(GridProba, GridBelief)
-#########print("-------------------------------------------------\n\n\n")
-GridBelief[2,11].Mouvement(GridProba, GridBelief)
-#########print("-------------------------------------------------\n\n\n")
-GridBelief[2,12].Mouvement(GridProba, GridBelief)
-##############
-########print("-------------------------------------------------\n\n\n")
-GridBelief[2,13].Mouvement(GridProba, GridBelief)
-########print("-------------------------------------------------\n\n\n")
-GridBelief[2,14].Mouvement(GridProba, GridBelief)
-########print("-------------------------------------------------\n\n\n")
-#
-GridBelief[1,13].Mouvement(GridProba, GridBelief)
-########print("-------------------------------------------------\n\n\n")
-#
-GridBelief[3,14].Mouvement(GridProba,GridBelief)
-########print("-------------------------------------------------\n\n\n")
-GridBelief[4,14].Mouvement(GridProba,GridBelief)
-GridBelief[6,12].Mouvement(GridProba, GridBelief)
-GridBelief[8,11].ProbabilisticWay(GridProba,GridBelief)
-GridBelief[8,12].Mouvement(GridProba,GridBelief)
-GridBelief[8,13].Mouvement(GridProba,GridBelief)
-GridBelief[7,14].Mouvement(GridProba,GridBelief)
-GridBelief[8,15].Mouvement(GridProba,GridBelief)
-GridBelief[8,17].Mouvement(GridProba,GridBelief)
-GridBelief[10,16].Mouvement(GridProba,GridBelief)
-GridBelief[5,17].Mouvement(GridProba,GridBelief)
-GridBelief[11,16].Mouvement(GridProba,GridBelief)
-GridBelief[13,15].Mouvement(GridProba,GridBelief)
-GridBelief[14,14].Mouvement(GridProba,GridBelief)"""
-#GridBelief[15,14].Mouvement(GridProba,GridBelief)
-#
-#GridBelief[19,14].Mouvement(GridProba,GridBelief)
-#GridBelief[18,14].Mouvement(GridProba,GridBelief)
 
 
-#GridBelief[19,14].Mouvement(GridProba,GridBelief)
-#GridBelief[18,14].Mouvement(GridProba,GridBelief)
-#GridBelief[19,14].getOut(GridProba,GridBelief)
-#GridBelief[19, 13].getOut(GridProba,GridBelief)
-#GridBelief[19, 12].getOut(GridProba,GridBelief)
-#GridBelief[19, 11].Mouvement(GridProba,GridBelief)
-#GridBelief[18, 11].Mouvement(GridProba,GridBelief)
-#GridBelief[17, 10].Mouvement(GridProba,GridBelief)
-"""print(GridBelief[17, 14].L)
-
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#print("-------------------------------------------------")
-#GridBelief[10,17].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[10,16].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[11,15].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[11,14].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[12,15].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[13,14].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[14,14].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[13,13].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[12,12].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[10,18].Mouvement(GridProba,GridBelief)
-#print("-------------------------------------------------\n\n\n")
-#GridBelief[9,19].Mouvement(GridProba,GridBelief)
-
-
-
-
-#GridBelief[0,0].CaseToVisit(GridBelief)
-"""
 #print(GridBelief[0,6].L,GridBelief[1,6].L, GridBelief[0,7].L)
 peoplebelief = np.zeros(GridProba.shape, dtype=float)
 wallsbelief = np.zeros(GridProba.shape, dtype=float)
@@ -311,8 +187,9 @@ plt.show()
 
 print("Movement counter at end", movementCounter.mvtCounter, " Humans saved at the end : ", movementCounter.humanCount)
 print("Humans saved at t=180 : ", humansSavedAt180)
-print(cl.PourcentPeopleProba(GridProba))
-print(movementCounter.positions)
+print("Cells explored", cl.PourcentPeopleProba(GridProba))
+print("Transition positions taken : ", movementCounter.positions)
+print("Positions of saved humans", movementCounter.humanPositions)
 
 
 
