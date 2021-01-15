@@ -98,7 +98,7 @@ for i in range(20):
 GridBelief[15,1].Mouvement(GridProba, GridBelief)
 counterFig = 0
 saved = False
-for _ in range(49):
+while 1:
 
     savemvt = movementCounter.mvtCounter
     lenpos = len(movementCounter.positions)
